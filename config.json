@@ -1,0 +1,21 @@
+{
+  "webPort": 3000,
+  "dashboardPassword": "",
+  "mc": {
+    "host": "DG_LAND502.aternos.me",
+    "port": 62974,
+    "username": "Nokar",
+    "version": "1.21.4",
+    "password": "",
+    "owner": "DARSHPROGAMERZL",
+    "reconnectDelayMs": 20000
+  },
+  "behavior": {
+    "autoEatAt": 14,
+    "critEatAt": 20,
+    "fleeHealth": 7,
+    "guardRange": 12,
+    "antiAfk": true,
+    "tossJunkWhenFull": true
+  }
+}
