@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOKAR 2.0 — Control Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Password overlay (only when dashboardPassword is set in config.json) -->
+  <div id="authOverlay" class="overlay hidden">
+    <form id="authForm" class="auth-card" autocomplete="off">
+      <div class="auth-logo">⚡</div>
+      <h2>NOKAR 2.0</h2>
+      <p>Dashboard locked. Enter password:</p>
+      <input type="password" id="authPass" placeholder="Password" autocomplete="current-password">
+      <button type="submit">🔓 Unlock</button>
+      <div id="authError" class="auth-error"></div>
+    </form>
+  </div>
+
+  <header class="header-bar">
+    <div class="brand">
+      <span class="brand-main">⚡ NOKAR <em>2.0</em></span>
+      <small id="serverInfo">—</small>
+    </div>
+    <div class="header-right">
+      <span class="pill" id="statePill">boot</span>
+      <div class="status-badge off" id="connBadge"><span class="pulse"></span><span id="connText">CONNECTING</span></div>
+      <button class="icon-btn" id="fsBtn" title="Toggle fullscreen">⛶</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ══════════════ DIAGNOSTICS ══════════════ -->
+    <section class="card col-4">
+      <h2>Bot Diagnostics</h2>
+      <div class="info-row"><span>Unit</span><strong id="diagName">—</strong></div>
+      <div class="info-row"><span>Server</span><strong id="diagServer">—</strong></div>
+      <div class="info-row"><span>Owner</span><strong id="diagOwner">—</strong></div>
+      <div class="info-row"><span>Position</span><strong id="diagPos">—</strong></div>
+      <div class="info-row"><span>Session</span><strong id="diagSession">—</strong></div>
+      <div class="info-row"><span>Kills / Deaths / Reconnects</span><strong id="diagStats">0 / 0 / 0</strong></div>
+      <div class="info-row"><span>Server Auth</span><strong id="diagAuth">—</strong></div>
+
+      <div class="bar-label"><span>❤️ Health</span><span id="hpText">—</span></div>
+      <div class="bar"><div class="bar-fill hp" id="hpBar"></div></div>
+      <div class="bar-label"><span>🍗 Food</span><span id="foodText">—</span></div>
+      <div class="bar"><div class="bar-fill food" id="foodBar"></div></div>
+
+      <div class="toggle-row">
+        <button id="guardBtn" class="toggle">🛡️ Guard: OFF</button>
+        <button id="afkBtn" class="toggle">🔄 Anti-AFK: OFF</button>
+      </div>
+    </section>
+
+    <!-- ══════════════ RADAR ══════════════ -->
+    <section class="card col-5">
+      <h2>Perimeter Radar <span class="muted" id="radarInfo"></span></h2>
+      <canvas id="radarCanvas" width="420" height="250"></canvas>
+      <div class="strip" id="playersStrip"></div>
+    </section>
+
+    <!-- ══════════════ EQUIPMENT ══════════════ -->
+    <section class="card col-3">
+      <h2>Equipment</h2>
+      <div class="held-card">
+        <div class="held-header">
+          <div class="held-icon" id="heldIcon">✋</div>
+          <div class="held-meta">
+            <div class="held-name" id="heldName">Empty Hand</div>
+            <div class="held-sub" id="heldSub">Count: 0</div>
+          </div>
+        </div>
+        <div class="bar slim" id="duraWrap" style="display:none">
+          <div class="bar-fill dura" id="duraBar"></div>
+        </div>
+      </div>
+      <div class="armor-grid" id="armorGrid"></div>
+      <div class="offhand-row"><span>Off-Hand</span><strong id="offhandName">None</strong></div>
+    </section>
+
+    <!-- ══════════════ MISSION CONTROL ══════════════ -->
+    <section class="card col-8">
+      <h2>Mission Control</h2>
+      <div class="ctrl-grid">
+        <div class="ctrl-block">
+          <label>Follow player</label>
+          <div class="row">
+            <input type="text" id="followName" placeholder="Player name">
+            <button id="followBtn">👣 Follow</button>
+          </div>
+        </div>
+        <div class="ctrl-block">
+          <label>Grind blocks</label>
+          <div class="row">
+            <input type="text" id="mineBlock" placeholder="iron / diamond / stone…" value="stone">
+            <input type="number" id="mineCount" value="16" min="1" max="999" style="max-width:72px">
+            <button id="mineBtn">⛏️ Mine</button>
+          </div>
+        </div>
+        <div class="ctrl-block">
+          <label>Walk to coordinates</label>
+          <div class="row">
+            <input type="number" id="goX" placeholder="X">
+            <input type="number" id="goY" placeholder="Y (opt)">
+            <input type="number" id="goZ" placeholder="Z">
+            <button id="gotoBtn">🧭 Go</button>
+          </div>
+        </div>
+        <div class="quick-row">
+          <button id="comeBtn">🏃 Come</button>
+          <button id="chopBtn">🪓 Chop 16</button>
+
+          <div class="row" style="margin-top:8px">
+            <input type="text" id="goalItem" placeholder="Goal: anything (diamond / iron_ingot / torch…)" value="diamond">
+            <input type="number" id="goalCount" value="1" min="1" max="999" style="max-width:72px">
+            <button id="goalBtn">🎯 Goal</button>
+          </div>
+          <button id="attackBtn">⚔️ Attack nearest</button>
+          <button id="eatBtn">🍗 Eat</button>
+          <button id="stopBtn" class="btn-danger">⏹️ STOP ALL</button>
+        </div>
+      </div>
+
+      <div class="queue-head">
+        <span>Task Queue</span>
+        <button id="clearQueueBtn" class="mini">clear</button>
+      </div>
+      <div class="queue-box" id="queueBox"><div class="muted pad">No tasks queued</div></div>
+    </section>
+
+    <!-- ══════════════ MANUAL CONTROL ══════════════ -->
+    <section class="card col-4">
+      <h2>Manual Control</h2>
+      <div class="dpad-grid">
+        <div></div><button data-move="forward">⬆️</button><div></div>
+        <button data-move="left">⬅️</button>
+        <button data-move="jump" class="jump-btn">🦘</button>
+        <button data-move="right">➡️</button>
+        <div></div><button data-move="back">⬇️</button><div></div>
+      </div>
+      <div class="action-row">
+        <button data-action="break">⛏️ Break block</button>
+        <button data-action="interact">✋ Use / Right-click</button>
+      </div>
+      <form class="input-form" id="cmdForm" autocomplete="off">
+        <input type="text" id="cmdInput" placeholder='Command e.g. "mine iron 64", "goal diamond 3", "diamond lao", "help"'>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <!-- ══════════════ LOG / CHAT ══════════════ -->
+    <section class="card col-12">
+      <h2>Log &amp; Chat Stream <button id="clearLogBtn" class="mini">clear</button></h2>
+      <div class="log-box" id="logs"></div>
+    </section>
+
+    <!-- ══════════════ INVENTORY ══════════════ -->
+    <section class="card col-12">
+      <h2>
+        <span>Inventory <span class="muted" id="selIndicator">— tap a slot to select, tap another to swap</span></span>
+        <button id="holdBtn" class="mini">✊ Hold selected</button>
+      </h2>
+      <div class="inv-wrapper">
+        <div class="inv-label"><span>Main Storage (slots 9–35)</span><span class="muted" id="invCount"></span></div>
+        <div class="inv-grid" id="mainGrid"></div>
+        <div class="inv-divider"></div>
+        <div class="inv-label"><span>Hotbar (slots 36–44)</span><span class="muted">main-hand active</span></div>
+        <div class="inv-grid" id="hotbarGrid"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
